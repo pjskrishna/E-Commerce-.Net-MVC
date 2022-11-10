@@ -1,0 +1,20 @@
+﻿@model LoginViewModel 
+@{
+    ViewBag.Title = "SignIn";
+}
+<h3 class="text-success">@TempData["successMessage"]</h3>
+<h2>LogIn</h2>
+<form asp-controller="account" asp-action="signin" method="post">
+    <label asp-for="UserName">UserName</label>
+    <input asp-for="UserName" />
+    <span asp-validation-for="UserName"></span>
+    <br />
+ 
+    <label asp-for="Password">Password</label>
+    <input asp-for="Password" type="password" />
+    <span asp-validation-for="Password"></span>
+
+    <br />
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <button type="submit">Sign In</button>
+</form>

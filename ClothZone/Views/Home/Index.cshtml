@@ -1,0 +1,33 @@
+﻿<!--model List<Product>-->
+@{
+    ViewBag.Title = "Index";
+   // ViewBag.products = @Model;
+}
+    <nav id="sidebarMenu"
+         class="collapse d-lg-block sidebar collapse bg-white">
+        <div class="position-sticky">
+            <div class="list-group list-group-flush mx-3 mt-4">
+                <div class="list-group-item list-group-item-action py-2 ripple"
+                   aria-current="true">Categories</div>
+      
+                <a href="#"
+                   class="list-group-item list-group-item-action py-2 ripple active">
+                    <i class="fas fa-chart-area fa-fw me-3"></i><span>Men's</span>
+                </a>
+                <a href="#"
+                   class="list-group-item list-group-item-action py-2 ripple"><i class="fas fa-lock fa-fw me-3"></i><span>Women's</span></a>
+                <a href="#"
+                   class="list-group-item list-group-item-action py-2 ripple">
+                    <i class="fas fa-chart-line fa-fw me-3"></i><span>Kid's</span>
+                </a>
+                
+                <div class="list-group-item list-group-item-action py-2 ripple">
+                    <!--name action controller-->
+                    @Html.ActionLink("ShowCart", "ShowCart", "Product")
+                </div>
+            </div>
+        </div>
+    </nav>
+<div id="tableContainer">
+    @Html.Partial("../Product/ProductTable");
+</div>

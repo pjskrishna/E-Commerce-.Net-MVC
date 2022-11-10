@@ -1,0 +1,67 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+<!--model List<Product>-->
+@{
+    ViewBag.Title = "ProductTable";
+    ViewBag.name = "null";
+}
+@{
+    IEnumerable<Product> products = ViewData["Products"] as IEnumerable<Product>;
+    IEnumerable<Category> categories = ViewData["Categories"] as IEnumerable<Category>;
+}
+<!--foreach (var product in Model)-->
+@foreach (Product product in products)
+{
+    <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="" alt="Card image cap">
+        <div class="card-body">
+            <h5 class="card-title">@product.Name</h5>
+            <p class="card-text">@product.Description</p>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Price: @product.Price</li>
+            <li class="list-group-item">Category: @{
+                foreach (Category item in categories)
+                {
+                    if(product.CategoryId == item.Id)
+                    { 
+                        ViewBag.name = item.Name;
+                    }
+                }
+                } @ViewBag.name</li>
+            <li class="list-group-item">Size: @product.Size</li>
+            <li class="list-group-item">Quantity: <input id="Qty" type="number" min="1" name="Qty"/></li>
+        </ul>
+        <div class="card-body">
+            <button class="addtocartbtn" data-id="@product.Id" type="button" data-islogin=HttpContext.Session.GetString("username")>Add To Cart</button>
+           <form asp-action="ViewProduct" asp-controller="Product">
+               <input type="hidden" value="@product.Id" name="Productid"/>
+            <button class="viewproductbt" type="submit">View Product</button>
+           </form>
+        </div>
+    </div>
+}
+
+
+<script>
+    $(".addtocartbtn").click(function () {
+        var Qty = $("#Qty").val();
+        $.ajax({
+            url: '/Product/AddToCart',
+            data: {
+                Id: $(this).attr('data-id'),
+                Qty: Qty,
+               
+            }
+        })
+        .done(function (response){
+            $("#tableContainer").html(response);
+               alert("Success");
+        })
+        .fail(function(XMLHttpRequest, textStatus, errorThrown){
+            alert("FAIL");
+        });
+    });
+   
+</script>

@@ -1,0 +1,59 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model Product;
+@{
+    ViewBag.Title = "Create";
+    ViewBag.Cat = "null";
+}
+@{
+    IEnumerable<Category> categories = ViewData["Categories"] as IEnumerable<Category>;
+}
+<h2>Create</h2>
+<h2>Create Product</h2>
+<form asp-controller="Product" asp-action="Create" method="post">
+    <label asp-for="Name">Name</label>
+    <input asp-for="Name" />
+    <span asp-validation-for="Name"></span>
+    <br />
+    <label asp-for="Description">Description</label>
+    <input asp-for="Description" />
+    <span asp-validation-for="Description"></span>
+    <br />
+    <label asp-for="Price">Price</label>
+    <input asp-for="Price" type="number"/>
+    <span asp-validation-for="Price"></span>
+
+    <br />
+    <label asp-for="Image">Image</label>
+    <input asp-for="Image" type="file"/>
+    <span asp-validation-for="Image"></span>
+    <select asp-for="CategoryId" name="Category" id="categoryid">
+        <option value="1">Kid's</option>
+        <option value="2">Men's'</option>
+        <option value="3">Women's'</option>
+    </select>
+
+    <br />
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <button type="submit">Sign Up</button>
+</form>
+
+    <script>
+    $("#saveBtn").click(function () {
+       
+        $.ajax({
+            type: 'POST',
+            url: '/Product/Create',
+            data: $("#createProduct").serialize()
+        })
+        .done(function (response){
+            $("#tableContainer").html(response);
+            $("#actionContainer").html("");
+            //alert("done");
+        })
+        .fail(function(XMLHttpRequest, textStatus, errorThrown){
+            alert("FAIL");
+        });
+    });
+</script>

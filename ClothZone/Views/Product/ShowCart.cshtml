@@ -1,0 +1,169 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor Accessor
+@{
+    ViewBag.Title = "ShowCart";
+    ViewBag.name = "";
+    ViewBag.image = "";
+    ViewBag.description = "";
+    ViewBag.price = "";
+    ViewBag.catname = "";
+    ViewBag.size = "";
+    ViewBag.tamt = 0;
+}
+@{
+    
+    IEnumerable<Cart> carts = ViewData["Carts"] as IEnumerable<Cart>;
+    IEnumerable<Product> products = ViewData["Products"] as IEnumerable<Product>;
+    IEnumerable<Category> categories = ViewData["Categories"] as IEnumerable<Category>;
+}
+<!--foreach (var product in Model)-->
+@{
+    long tamount = 0;
+    foreach (Cart c in carts)
+    {
+        if (c.UserId == Accessor.HttpContext.Session.GetInt32("uid"))
+        {
+            tamount = tamount + c.TPrice;
+            ViewBag.tamt = tamount;
+        }
+    }
+   
+}
+<div> @ViewBag.tamt</div>
+<!--
+    <form>
+    <button id="checkoutbtn" type="button" data-amt= tamount>Checkout</button>
+</form>
+
+-->
+<form asp-action="checkout" asp-controller="product">
+    <input type="hidden" value="@ViewBag.tamt" name="amt"/>
+    <button type="submit">CheckOut</button>
+</form>
+@foreach (Cart cart in carts)
+{
+    <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src=
+                
+
+            @{
+                    foreach (Product item in products)
+                    {
+                        if (cart.ProductId == item.Id)
+                        {
+                            ViewBag.image = item.Image;
+                        }
+                    }
+                }
+
+
+           "@ViewBag.image " alt="Card image cap">
+        <div class="card-body">
+            <h5 class="card-title">
+
+                @{
+                    foreach (Product item in products)
+                    {
+                        if (cart.ProductId == item.Id)
+                        {
+                            ViewBag.name = item.Name;
+                        }
+                    }
+                }
+
+
+                @ViewBag.name
+
+            </h5>
+            <p class="card-text">
+               @{
+                   foreach (Product item in products)
+                   {
+                           if (cart.ProductId == item.Id)
+                           {
+                           ViewBag.description = item.Description;
+                           }
+                    }
+               }
+               @ViewBag.description
+
+            </p>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Price:
+
+
+                @{
+                    foreach (Product item in products)
+                    {
+                        if (cart.ProductId == item.Id)
+                        {
+                            ViewBag.price = item.Price;
+                        }
+                    }
+                }
+                @ViewBag.price
+
+
+            </li>
+            <li class="list-group-item">
+                Category: @{
+                    foreach (Product item in products)
+                    {
+                        if (cart.ProductId == item.Id)
+                        {
+                            var id = item.CategoryId;
+                            foreach (Category cat in categories)
+                            {
+                                if(cat.Id==id)
+                                {
+                                    ViewBag.catname = cat.Name;
+                                }
+                            }
+                        }
+                    }
+                } @ViewBag.catname
+            </li>
+            <li class="list-group-item">Size:
+
+
+                @{
+                    foreach (Product item in products)
+                    {
+                        if (cart.ProductId == item.Id)
+                        {
+                            ViewBag.size = item.Size;
+                        }
+                    }
+                }
+                @ViewBag.size
+
+            </li>
+        </ul>
+    </div>
+}
+
+<script>
+    $("#checkoutbtn").click(function () {
+       
+        $.ajax({
+            url: '/Product/checkout',
+            data: {
+                data:{
+                    amt: $(this).attr('data-amt')
+                }
+
+            }
+        })
+            .done(function (response) {
+                console.log("success");
+            })
+            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("FAIL");
+            });
+    });
+
+</script>
